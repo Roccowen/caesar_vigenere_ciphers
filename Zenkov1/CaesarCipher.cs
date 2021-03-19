@@ -37,7 +37,8 @@ namespace Zenkov1
             var currentAlphabetOccurrence = GetGlobalAlphabetOccurrence();
             List<double> DAll = new List<double>();
             var cipherAlph = cipher.ToHashSet().OrderBy(c => (int)c).ToList();
-            for (int i = 0; i < cipherAlph.Count; i++)
+            int alph = 32 < cipherAlph.Count ? cipherAlph.Count : 32;
+            for (int i = 0; i < alph; i++)
             {
                 double D = 0.00;
                 var currentOccurence = new Dictionary<char, double>();

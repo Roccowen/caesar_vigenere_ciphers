@@ -50,7 +50,8 @@ namespace Zenkov1
         }
         public (string text, string cipherKey) Breaking(string cipher)
         {
-            var key = BreakingFriedman(cipher);
+            // BreakingKasiski или BreakingFriedman.
+            var key = BreakingFriedman(cipher); 
             return (Decrypting(cipher, key), key);
         }
         public string BreakingFriedman(string cipher)
@@ -58,14 +59,7 @@ namespace Zenkov1
             var shiftedTexts = new List<List<string>>();
             for (int s = 0; s < 50; s++)
             {
-                shiftedTexts.Add(new List<string>());
-                for (int i = 0; i <= s; i++)
-                {
-                    string text = "";
-                    for (int k = i; k < cipher.Length; k += s + 1)
-                        text += cipher[k];
-                    shiftedTexts[s].Add(text);
-                }
+                shiftedTexts.Add(GetShiftedText(cipher, s));              
                 if (shiftedTexts[s].Average(n => GetСoincidenceIndex(n)) > 0.05)
                 {
                     var output = "";
@@ -73,13 +67,21 @@ namespace Zenkov1
                     return output;
                 }
             }
-            return "Количество символов в ключе более 50";
+            return "0"; 
         }
-        public int BreakingKasiski(string cipher)
+        public List<string> GetShiftedText(string cipher, int shift)
         {
-            throw new NotImplementedException();
+            var shiftedText = new List<string>();
+            for (int i = 0; i <= shift; i++)
+            {
+                string text = "";
+                for (int k = i; k < cipher.Length; k += shift + 1)
+                    text += cipher[k];
+                shiftedText.Add(text);
+            }
+            return shiftedText;
         }
-        public static double GetСoincidenceIndex(string text)
+        public double GetСoincidenceIndex(string text)
         {
             double index = 0;
             List<char> letters = text.ToHashSet().ToList();
@@ -89,6 +91,74 @@ namespace Zenkov1
                 index += cc * (cc - 1);
             }
             return index / (double)(text.Count() * text.Count() - 1);
+        }
+        public string BreakingKasiski(string cipher)
+        {
+            var output = "";
+            var repeatedSubstrs = GetRepeatedSubstrings(cipher);
+            var gcds = new Dictionary<int, int>();
+            var repeatedSubstrsUp2 = repeatedSubstrs.Values.Where(r => r.Count > 1);
+            foreach (var sub in repeatedSubstrsUp2)
+                for (int i = 0; i < sub.Count - 2; i++)
+                {
+                    int gcd = GCD(sub[i + 1] - sub[i], sub[i + 2] - sub[i + 1]);
+                    if (gcd > 1)
+                        if (gcds.ContainsKey(gcd))
+                            gcds[gcd]++;
+                        else
+                            gcds.Add(gcd, 1);
+                }
+            var keyLenght = gcds.Aggregate((l, r) => l.Value * l.Key > r.Value * r.Key ? l : r).Key;
+            var shiftedTexts = GetShiftedText(cipher, keyLenght - 1);
+            shiftedTexts.ForEach(n => output += cyrillicAlphabet[Convert.ToInt32(caesarCipher.Breaking(n).cipherKey)]);
+            return output;
+        }
+        static public Dictionary<string, List<int>> GetRepeatedSubstrings(string text, int maxLenght = 5, int minLenght = 2)
+        {
+            var occ = new Dictionary<string, List<int>>();
+            for (int i = 0; i < text.Length; i++)
+                for (int j = minLenght; j <= maxLenght && (i - j) > 0; j++)
+                {
+                    string str = text.Substring(i - j, j);
+                    if (occ.ContainsKey(str))
+                        occ[str].Add(i - j);
+                    else
+                        occ.Add(str, new List<int> { i - j });
+                }
+            Console.Write("");
+            return occ;
+        }
+        public int GCD(int a, int b)
+        {
+            if (a == 0)
+                return b;
+            else
+            {
+                var min = a < b ? a : b;
+                var max = a > b ? a : b;
+                return GCD(max - min, min);
+            }
+        }
+        private string BreakingKasiski2(string cipher)
+        {
+            var output = "";
+            var longerRepeat = GetRepeatedSubstrings(cipher, 8, 3)
+                .Where(r => r.Value.Count > 1)
+                .Aggregate((l, r) => l.Key.Length > r.Key.Length ? l : r).Value;
+            var gcds = new Dictionary<int, int>();
+            for (int i = 0; i < longerRepeat.Count - 1; i++)
+            {
+                int gcd = GCD(longerRepeat[i + 1], longerRepeat[i]);
+                if (gcd > 1)
+                    if (gcds.ContainsKey(gcd))
+                        gcds[gcd]++;
+                    else
+                        gcds.Add(gcd, 1);
+            }
+            var keyLenght = gcds.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
+            var shiftedTexts = GetShiftedText(cipher, keyLenght);
+            shiftedTexts.ForEach(n => output += cyrillicAlphabet[Convert.ToInt32(caesarCipher.Breaking(n).cipherKey)]);
+            return output;
         }
         private char[][] GetTabulaRecta()
         {
