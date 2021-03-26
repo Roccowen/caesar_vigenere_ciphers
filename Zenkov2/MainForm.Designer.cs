@@ -52,6 +52,7 @@ namespace Zenkov2
             this.InputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.InputTextBox.Size = new System.Drawing.Size(384, 618);
             this.InputTextBox.TabIndex = 0;
+            this.InputTextBox.Text = "\r\n";
             // 
             // ResultTextBox
             // 
