@@ -36,8 +36,6 @@ namespace Zenkov2
             this.BreakingButton = new System.Windows.Forms.Button();
             this.ClearButton = new System.Windows.Forms.Button();
             this.DecryptionKeyTextBox = new System.Windows.Forms.TextBox();
-            this.BreakingKeyTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -52,7 +50,6 @@ namespace Zenkov2
             this.InputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.InputTextBox.Size = new System.Drawing.Size(384, 618);
             this.InputTextBox.TabIndex = 0;
-            this.InputTextBox.Text = "\r\n";
             // 
             // ResultTextBox
             // 
@@ -70,7 +67,7 @@ namespace Zenkov2
             // EncryptionButton
             // 
             this.EncryptionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.EncryptionButton.Location = new System.Drawing.Point(937, 116);
+            this.EncryptionButton.Location = new System.Drawing.Point(928, 116);
             this.EncryptionButton.Name = "EncryptionButton";
             this.EncryptionButton.Size = new System.Drawing.Size(91, 23);
             this.EncryptionButton.TabIndex = 2;
@@ -81,7 +78,7 @@ namespace Zenkov2
             // DencryptionButton
             // 
             this.DencryptionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DencryptionButton.Location = new System.Drawing.Point(814, 116);
+            this.DencryptionButton.Location = new System.Drawing.Point(831, 116);
             this.DencryptionButton.Name = "DencryptionButton";
             this.DencryptionButton.Size = new System.Drawing.Size(91, 23);
             this.DencryptionButton.TabIndex = 3;
@@ -92,7 +89,7 @@ namespace Zenkov2
             // BreakingButton
             // 
             this.BreakingButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BreakingButton.Location = new System.Drawing.Point(814, 183);
+            this.BreakingButton.Location = new System.Drawing.Point(831, 155);
             this.BreakingButton.Name = "BreakingButton";
             this.BreakingButton.Size = new System.Drawing.Size(91, 23);
             this.BreakingButton.TabIndex = 4;
@@ -102,7 +99,7 @@ namespace Zenkov2
             // 
             // ClearButton
             // 
-            this.ClearButton.Location = new System.Drawing.Point(937, 355);
+            this.ClearButton.Location = new System.Drawing.Point(928, 155);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(91, 23);
             this.ClearButton.TabIndex = 10;
@@ -117,24 +114,6 @@ namespace Zenkov2
             this.DecryptionKeyTextBox.Name = "DecryptionKeyTextBox";
             this.DecryptionKeyTextBox.Size = new System.Drawing.Size(214, 77);
             this.DecryptionKeyTextBox.TabIndex = 13;
-            // 
-            // BreakingKeyTextBox
-            // 
-            this.BreakingKeyTextBox.Location = new System.Drawing.Point(814, 225);
-            this.BreakingKeyTextBox.Multiline = true;
-            this.BreakingKeyTextBox.Name = "BreakingKeyTextBox";
-            this.BreakingKeyTextBox.ReadOnly = true;
-            this.BreakingKeyTextBox.Size = new System.Drawing.Size(214, 77);
-            this.BreakingKeyTextBox.TabIndex = 14;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(811, 209);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Ключ шифра:";
             // 
             // label2
             // 
@@ -151,8 +130,6 @@ namespace Zenkov2
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1044, 642);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.BreakingKeyTextBox);
             this.Controls.Add(this.DecryptionKeyTextBox);
             this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.InputTextBox);
@@ -164,7 +141,6 @@ namespace Zenkov2
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VigenereCipher";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -179,8 +155,6 @@ namespace Zenkov2
         private System.Windows.Forms.Button BreakingButton;
         private System.Windows.Forms.Button ClearButton;
         private System.Windows.Forms.TextBox DecryptionKeyTextBox;
-        private System.Windows.Forms.TextBox BreakingKeyTextBox;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
     }
 }

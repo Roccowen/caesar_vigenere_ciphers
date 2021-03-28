@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Zenkov1;
 
@@ -22,34 +15,32 @@ namespace Zenkov2
         }
         private void EncryptionButton_Click(object sender, EventArgs e)
         {
-            var inp = ClearText(InputTextBox.Text);
-            var k = ClearText(DecryptionKeyTextBox.Text);
-            if (inp != null && k != null)
-                ResultTextBox.Text = TextWithSpaces(cipher.Encrypting(ClearText(InputTextBox.Text),
-                                            ClearTextWithError(DecryptionKeyTextBox.Text)));
+            var input = ClearText(InputTextBox.Text);
+            var key = ClearTextWithError(DecryptionKeyTextBox.Text);
+            if (!string.IsNullOrEmpty(input) && !string.IsNullOrEmpty(key))
+                ResultTextBox.Text = TextWithSpaces(cipher.Encrypting(input, key));
         }
         private void DencryptionButton_Click(object sender, EventArgs e)
         {
-            var inp = ClearText(InputTextBox.Text);
-            var k = ClearText(DecryptionKeyTextBox.Text);
-            if (inp != null && k != null)
-                ResultTextBox.Text = TextWithSpaces(cipher.Decrypting(ClearText(InputTextBox.Text),
-                                            ClearTextWithError(DecryptionKeyTextBox.Text)));
+            var input = ClearText(InputTextBox.Text);
+            var key = ClearTextWithError(DecryptionKeyTextBox.Text);
+            if (!string.IsNullOrEmpty(input) && !string.IsNullOrEmpty(key))
+                ResultTextBox.Text = TextWithSpaces(cipher.Decrypting(input, key));
         }
         private void BreakingButton_Click(object sender, EventArgs e)
         {
-            if (ClearText(InputTextBox.Text) != "" && ClearText(InputTextBox.Text) != null)
+            var input = ClearText(InputTextBox.Text);
+            if (!string.IsNullOrEmpty(input))
             {
                 var result = cipher.Breaking(ClearText(InputTextBox.Text));
                 ResultTextBox.Text = TextWithSpaces(result.text);
-                BreakingKeyTextBox.Text = (string)result.cipherKey;
+                DecryptionKeyTextBox.Text = (string)result.cipherKey;
             }
         }
         private void ClearButton_Click(object sender, EventArgs e)
         {
             InputTextBox.Text = "";
             ResultTextBox.Text = "";
-            BreakingKeyTextBox.Text = "";
             DecryptionKeyTextBox.Text = "";
         }
         private static string ClearText(string text)
@@ -84,10 +75,6 @@ namespace Zenkov2
                 }
             }
             return output;
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
