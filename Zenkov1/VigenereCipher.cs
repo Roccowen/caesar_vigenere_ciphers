@@ -46,9 +46,9 @@ namespace Zenkov1
         }
         public (string text, string cipherKey) Breaking(string cipher)
         {
-            //Console.WriteLine($"{BreakingKasiski(cipher)} {BreakingKasiski2(cipher)} {BreakingFriedman(cipher)}");
+            //Console.WriteLine($"{BreakingKasiski(cipher)} {BreakingFriedman(cipher)}");
             
-            // BreakingKasiski, BreakingKasiski2 или BreakingFriedman.
+            // BreakingKasiski или BreakingFriedman.
             var key = BreakingFriedman(cipher); 
             return (Decrypting(cipher, key), key);
         }
@@ -90,7 +90,7 @@ namespace Zenkov1
             }
             return index / (double)(text.Count() * text.Count() - 1);
         }
-        private Dictionary<string, List<int>> GetRepeatedSubstrings(string text, int substrRepeatCount = 2, int substrMaxLenght = 5, int substrMinLenght = 2)
+        private Dictionary<string, List<int>> GetRepeatedSubstrings(string text, int substrMinRepeatCount = 2, int substrMaxLenght = 5, int substrMinLenght = 2)
         {
             var occ = new Dictionary<string, List<int>>();
             for (int i = 0; i < text.Length; i++)
@@ -102,8 +102,9 @@ namespace Zenkov1
                     else
                         occ.Add(str, new List<int> { i - j });
                 }
-            return occ.Where(r => r.Value.Count >= substrRepeatCount)
-                      .ToDictionary(r => r.Key, r => r.Value);
+            var res = occ.Where(r => r.Value.Count >= substrMinRepeatCount)
+                         .ToDictionary(r => r.Key, r => r.Value);
+            return res;
         }
         // Greatest common divisor.
         // Наибольший общий делитель.
@@ -120,36 +121,27 @@ namespace Zenkov1
         }
         private string BreakingKasiski(string cipher)
         {
-            var longerRepeat = GetRepeatedSubstrings(cipher, 8, 3, 3)
-                .Aggregate((l, r) => l.Key.Length > r.Key.Length ? l : r).Value;
-            var gcds = new Dictionary<int, int>();
-            for (int i = 0; i < longerRepeat.Count - 2; i++)
-            {
-                int gcd = GCD(longerRepeat[i + 1] - longerRepeat[i], longerRepeat[i + 2] - longerRepeat[i + 1]);
-                if (gcd > 1)
-                    if (gcds.ContainsKey(gcd))
-                        gcds[gcd]++;
-                    else
-                        gcds.Add(gcd, 1);
-            }
-            var keyLenght = gcds.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
-            return GetCipherKey(cipher, keyLenght);
-        }
-        private string BreakingKasiski2(string cipher)
-        {
-            var repeatedSubstrs = GetRepeatedSubstrings(cipher);
+            var repeatedSubstrs = GetRepeatedSubstrings(cipher, 3, 5, 3);
+            //var repeatedSubstrs = GetRepeatedSubstrings(cipher, 3, 8, 3)
+            //                      .Aggregate((l, r) => l.Key.Length > r.Key.Length ? l : r).Value;
             var gcds = new Dictionary<int, int>();
             foreach (var sub in repeatedSubstrs.Values)
+            {
+                int gcd = 0;
                 for (int i = 0; i < sub.Count - 2; i++)
                 {
-                    int gcd = GCD(sub[i + 1] - sub[i], sub[i + 2] - sub[i + 1]);
+                    if (gcd > 0)
+                        gcd = GCD(sub[i + 1] - sub[i], gcd);
+                    else
+                        gcd = GCD(sub[i + 1] - sub[i], sub[i + 2] - sub[i + 1]);
                     if (gcd > 1)
                         if (gcds.ContainsKey(gcd))
                             gcds[gcd]++;
                         else
                             gcds.Add(gcd, 1);
                 }
-            var keyLenght = gcds.Aggregate((l, r) => l.Value * l.Key > r.Value * r.Key ? l : r).Key;
+            }
+            var keyLenght = gcds.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
             return GetCipherKey(cipher, keyLenght);
         }
         private string GetCipherKey(string cipher, int keyLenght)
