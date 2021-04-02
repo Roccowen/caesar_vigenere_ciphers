@@ -173,7 +173,6 @@ namespace Zenkov1
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CaesarCipher";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.EncriptionNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DencriptionNumericUpDown)).EndInit();
             this.ResumeLayout(false);

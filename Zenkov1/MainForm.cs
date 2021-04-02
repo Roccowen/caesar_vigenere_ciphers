@@ -52,21 +52,18 @@ namespace Zenkov1
         }
         private static string TextWithSpaces(string text)
         {
-            string output = "";
-            for (int i = 0, c = 1; i < text.Length; i++, c++)
+            char[] output = new char[text.Length + text.Length/5];
+            for (int i = 0, s = 0, c = 0; i < text.Length; i++, c++)
             {
-                output += text[i];
                 if (c == 5)
                 {
-                    output += " ";
+                    output[i + s] = ' ';
+                    s += 1;
                     c = 0;
-                }                    
+                }
+                output[i + s] = text[i];  
             }
-            return output;
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
+            return new string(output);
         }
     }
 }

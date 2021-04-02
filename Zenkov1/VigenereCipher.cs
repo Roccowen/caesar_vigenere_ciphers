@@ -16,33 +16,23 @@ namespace Zenkov1
         }
         public string Encrypting(string text, object _key)
         {
-            var output = "";
+            var len = text.Length;
+            var output = new char[len];
             string key = (string)_key;
-            int[] keyArr = new int[text.Length];
             if (key.Length != 0)
-            {
-                for (int i = 0; i < keyArr.Length; i++)
-                {
-                    keyArr[i] = (int)key[i % key.Length] - 1040;
-                    output += tabulaRecta[text[i] - 1040][keyArr[i]];
-                }               
-            }
-            return output;
+                for (int i = 0; i < len; i++)
+                    output[i] = tabulaRecta[text[i] - 1040][key[i % key.Length] - 1040];
+            return new string(output);
         }
         public string Decrypting(string cipher, object _key)
         {
-            var output = "";
+            var len = cipher.Length;
+            var output = new char[len];
             string key = (string)_key;
-            int[] keyArr = new int[cipher.Length];
             if (key.Length != 0)
-            {
-                for (int i = 0; i < keyArr.Length; i++)
-                {
-                    keyArr[i] = (int)key[i % key.Length] - 1040;
-                    output += tabulaRecta[0][Array.IndexOf(tabulaRecta[keyArr[i]], cipher[i])];
-                }           
-            }
-            return output;
+                for (int i = 0; i < len; i++)
+                    output[i] = tabulaRecta[0][Array.IndexOf(tabulaRecta[key[i % key.Length] - 1040], cipher[i])];
+            return new string(output);
         }
         public (string text, string cipherKey) Breaking(string cipher)
         {

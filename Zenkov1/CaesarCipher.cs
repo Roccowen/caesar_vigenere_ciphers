@@ -6,10 +6,13 @@ namespace Zenkov1
 {
     public class CaesarCipher : ICipher
     {
+        private Dictionary<char, double> tableOccurence;
+        public CaesarCipher()
+        {
+            tableOccurence = GetGlobalAlphabetOccurrence();
+        }
         private char EncryptionAlg(char c, int key, char[] alphabet) => 
-            alphabet[(alphabet.Length + (Array.IndexOf(alphabet, c) + key % alphabet.Length)) % alphabet.Length];
-        private char DecryptionAlg(char c, int key, char[] alphabet) =>
-            alphabet[(alphabet.Length + (Array.IndexOf(alphabet, c) - key % alphabet.Length)) % alphabet.Length]; 
+            alphabet[(alphabet.Length + (Array.IndexOf(alphabet, c) + key % alphabet.Length)) % alphabet.Length]; 
         public string Encrypting(string text, object key)
         {
             var output = "";
@@ -20,21 +23,11 @@ namespace Zenkov1
                     output += EncryptionAlg(c, (int)key, latinAlphabet.ToCharArray());
             return output;
         }
-        public string Decrypting(string cipher, object key)
-        {
-            var output = "";
-            foreach (char c in cipher)
-                if (c >= 1040 && c <= 1071)
-                    output += DecryptionAlg(c, (int)key, cyrillicAlphabet.ToCharArray());
-                else
-                    output += DecryptionAlg(c, (int)key, latinAlphabet.ToCharArray());
-            return output;
-        }
+        public string Decrypting(string cipher, object key) => Encrypting(cipher, -(int) key);
         public (string text, string cipherKey) Breaking(string cipher)
         {
-            var currentAlphabetOccurrence = GetGlobalAlphabetOccurrence();
             List<double> DAll = new List<double>();
-            var cipherAlph = cipher.ToHashSet().OrderBy(c => (int)c).ToList();
+            var cipherAlph = cipher.ToHashSet().ToList();
             int alph = 32 < cipherAlph.Count ? cipherAlph.Count : 32;
             for (int i = 0; i < alph; i++)
             {
@@ -44,7 +37,7 @@ namespace Zenkov1
                 foreach (char c in cipherAlph)
                 {
                     currentOccurence.Add(c, (double)cipherDec.CharCount(c) / (double)cipherDec.Length);
-                    D += Math.Pow(currentAlphabetOccurrence[c] - currentOccurence[c], 2);
+                    D += Math.Pow(tableOccurence[c] - currentOccurence[c], 2);
                 }
                 DAll.Add(D);
             }
@@ -115,17 +108,6 @@ namespace Zenkov1
             occ.Add('Y', 0.0152);
             occ.Add('Z', 0.0005);
             return occ;
-        }
-    }
-    public  static class StringExtension
-    {
-        public static int CharCount(this string str, char c)
-        {
-            int counter = 0;
-            for (int i = 0; i < str.Length; i++)
-                if (str[i] == c)
-                    counter++;
-            return counter;
         }
     }
 }
