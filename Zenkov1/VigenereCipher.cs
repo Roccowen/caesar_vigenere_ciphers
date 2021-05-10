@@ -7,8 +7,8 @@ namespace Zenkov1
     public class VigenereCipher : ICipher
     {
         private char[][] tabulaRecta;
-        private CaesarCipher caesarCipher;
-        const string cyrillicAlphabet = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        private readonly CaesarCipher caesarCipher;
+        private readonly string cyrillicAlphabet = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         public VigenereCipher()
         {
             tabulaRecta = GetTabulaRecta();

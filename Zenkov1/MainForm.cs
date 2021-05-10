@@ -13,21 +13,47 @@ namespace Zenkov1
 {
     public partial class MainForm : Form
     {
-        private static ICipher cipher = new CaesarCipher();
-        private static Regex textRegex = new Regex(@"[^A-ZА-ЯЁ]");
+        private static readonly ICipher cipher = new CaesarCipher();
+        private static readonly Regex textRegex = new Regex(@"[^A-ZА-ЯЁ]");
         public MainForm()
         {
             InitializeComponent();
         }
         private void EncryptionButton_Click(object sender, EventArgs e)
         {
-            ResultTextBox.Text = TextWithSpaces(cipher.Encrypting(ClearText(InputTextBox.Text),
-                                                                    (int)EncriptionNumericUpDown.Value));
+            try
+            {
+                int key = int.Parse(keyInputTextBox.Text);
+                ResultTextBox.Text = TextWithSpaces(cipher.Encrypting(ClearText(InputTextBox.Text), key));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(
+                    "Ключ должен быть целым числом",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+            }
         }
         private void DencryptionButton_Click(object sender, EventArgs e)
         {
-            ResultTextBox.Text = TextWithSpaces(cipher.Decrypting(ClearText(InputTextBox.Text),
-                                                                    (int)DencriptionNumericUpDown.Value));
+            try
+            {
+                int key = int.Parse(keyInputTextBox.Text);
+                ResultTextBox.Text = TextWithSpaces(cipher.Decrypting(ClearText(InputTextBox.Text), key));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(
+                    "Ключ должен быть целым числом",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+            }
         }
         private void BreakingButton_Click(object sender, EventArgs e)
         {
@@ -35,14 +61,14 @@ namespace Zenkov1
             {
                 var result = cipher.Breaking(ClearText(InputTextBox.Text));
                 ResultTextBox.Text = TextWithSpaces(result.text);
-                BreakingKeyLabel.Text = $"Ключ шифра: {result.cipherKey}";
+                keyInputTextBox.Text = result.cipherKey;
             }          
         }
         private void ClearButton_Click(object sender, EventArgs e)
         {
             InputTextBox.Text = "";
             ResultTextBox.Text = "";
-            BreakingKeyLabel.Text = "";
+            keyInputTextBox.Text = "";
 
         }
         private static string ClearText(string text) 
