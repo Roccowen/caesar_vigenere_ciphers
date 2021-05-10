@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Zenkov1;
@@ -32,9 +33,20 @@ namespace Zenkov2
             var input = ClearText(InputTextBox.Text);
             if (!string.IsNullOrEmpty(input))
             {
-                var result = cipher.Breaking(ClearText(InputTextBox.Text));
-                ResultTextBox.Text = TextWithSpaces(result.text);
-                DecryptionKeyTextBox.Text = (string)result.cipherKey;
+                try
+                {
+                    var result = cipher.Breaking(ClearText(InputTextBox.Text));
+                    ResultTextBox.Text = TextWithSpaces(result.text);
+                    DecryptionKeyTextBox.Text = (string)result.cipherKey;
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    MessageBox.Show(ex.Message,
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+                }               
             }
         }
         private void ClearButton_Click(object sender, EventArgs e)

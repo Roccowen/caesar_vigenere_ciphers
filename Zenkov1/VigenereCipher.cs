@@ -19,9 +19,8 @@ namespace Zenkov1
             var len = text.Length;
             var output = new char[len];
             string key = (string)_key;
-            if (key.Length != 0)
-                for (int i = 0; i < len; i++)
-                    output[i] = tabulaRecta[text[i] - 1040][key[i % key.Length] - 1040];
+            for (int i = 0; i < len; i++)
+                output[i] = tabulaRecta[text[i] - 1040][key[i % key.Length] - 1040];
             return new string(output);
         }
         public string Decrypting(string cipher, object _key)
@@ -29,9 +28,8 @@ namespace Zenkov1
             var len = cipher.Length;
             var output = new char[len];
             string key = (string)_key;
-            if (key.Length != 0)
-                for (int i = 0; i < len; i++)
-                    output[i] = tabulaRecta[0][Array.IndexOf(tabulaRecta[key[i % key.Length] - 1040], cipher[i])];
+            for (int i = 0; i < len; i++)
+                output[i] = tabulaRecta[0][Array.IndexOf(tabulaRecta[(char)(key[i % key.Length] - 1040)], cipher[i])];
             return new string(output);
         }
         public (string text, string cipherKey) Breaking(string cipher)
@@ -55,7 +53,7 @@ namespace Zenkov1
                     return output;
                 }
             }
-            return "0"; 
+            throw new KeyNotFoundException("Ключ не найден или длина клчюча более 50 знаков.");
         }
         private List<string> GetShiftedText(string cipher, int shift)
         {
